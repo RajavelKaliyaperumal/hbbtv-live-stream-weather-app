@@ -6,11 +6,11 @@
 //For City selection Menu
 const Cities: string[] = ["London", "Paris", "Berlin", "Rome", "Madrid"];
 
-const OPENWEATHERMAP_API_KEY = "017914354411aa57b015db559387ef50"; //To be added .env
+const OPENWEATHERMAP_API_KEY = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
 
 const WEATHER_API_RESPONSE_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-const WEATHER_API_ENDPOINT = `https://a3pi.openweathermap.org/data/2.5/weather?q=<city>&appid=${OPENWEATHERMAP_API_KEY}&units=metric`
+const WEATHER_API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=<city>&appid=${OPENWEATHERMAP_API_KEY}&units=metric`
 
 const WEATHER_API_RETRY_COUNT = 5;//
 
