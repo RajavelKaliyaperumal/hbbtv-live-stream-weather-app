@@ -1,0 +1,28 @@
+.player_progress{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    left: -128px;
+    width: 1280px;
+    height: 120px;
+    bottom: -36px;
+    z-index: 1;
+  }
+
+  .player_resoultion{
+    height: 50px;
+    top: 14px;
+    left: 134px;
+    position: absolute;
+    width: 240px;
+    border-radius: 10px;
+    line-height: 50px;
+    font-size: 30px;
+    padding-left: 10px;
+    color: #fff;
+  }
+
+  .player_resoultion.selected {
+    background-color: #356ca6;
+    font-weight: 400;
+  }

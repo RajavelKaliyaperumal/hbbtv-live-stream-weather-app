@@ -1,0 +1,19 @@
+/** safe area as recommended by HbbTv standard */
+div#safe_area 
+{
+    position: absolute;
+    left: 128px; 
+    top: 36px; 
+    width: 1024px; 
+    height: 648px;
+    border: 1px solid green;
+}
+
+/*
+Headings (H1, H2)	36px - 48px
+Subheadings (H3, H4)	28px - 34px
+Body Text	22px - 26px
+Menu Items	26px - 30px
+Button Text	24px - 30px
+Captions/Small Text	18px - 22px
+*/

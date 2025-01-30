@@ -1,0 +1,9 @@
+.hbbtv_video_player
+{
+  position: absolute;
+  left: -128px;
+  top: -36px;
+  width: 1280px;
+  height: 720px;
+  background-color: aliceblue;
+}
