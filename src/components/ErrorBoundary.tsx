@@ -8,7 +8,7 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     const errorHandler = (event: any) => {
       setHasError(true);
       setError(event.error || '')
-      console.error('Caught error:', event.error);
+      console.error('Caught error:', event?.error);
     };
     
     window.addEventListener('error', errorHandler);
@@ -21,7 +21,7 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   }, []);
 
   if (hasError) {
-    return <h1>Something went wrong. ${error}</h1>;
+    return <h1>Something went wrong. {error}</h1>;
   }
 
   return <>{children}</>;

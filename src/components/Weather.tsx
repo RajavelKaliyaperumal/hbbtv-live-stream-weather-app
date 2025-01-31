@@ -37,7 +37,7 @@ const Weather: React.FC<WeatherProps> = ({onSelect, city, active, onClose}) => {
     });
   
   return (
-    <div tabIndex={0} className="weather_wrapper">
+    <div className="weather_wrapper">
       <div  className={`weather_header ${active ? "selected" : ""}`} >
         <div className='weather_city'>{city}</div>
       </div>

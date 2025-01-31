@@ -1,4 +1,10 @@
 # Changelog
+v1.0.2 (2025-01-31)
+- Prevent default browser behavior to keep control in the HbbTV app
+- Proper keyset handling with the HbbTV keyset API
+- BackKey handing to exit app 
+- Added ErrorModel to display playback error
+
 v1.0.1 (2025-01-31)
 - Integrated the Dash js to playback the DRM content
 - Implemented HTML5 Videoplayer with Dash

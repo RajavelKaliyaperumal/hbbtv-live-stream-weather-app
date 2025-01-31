@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useKeyHandler } from '../hooks/userKeyHandler';
 import MenuListProps from "../types/MenuList";
 import '../styles/Menu.css';
+import '../styles/Slide.css';
 
 const MenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem }) => {
   let index = items.findIndex(item=>item===selectedItem) || 0;
   const [selectedIndex, setSelectedIndex] = useState<number>(index);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+
+    return () => clearTimeout(timer); // Cleanup timeout
+  }, []);
   useKeyHandler({
         onEnter: () => {
             onSelect(items[selectedIndex]);
@@ -19,7 +28,7 @@ const MenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem }) =>
     });
 
   return (
-    <div className="menu_container" tabIndex={0} >
+    <div  className={`menu_container slide-left ${isVisible ? "visible" : ""}`}>
       <div className="menu_list"> 
       {items.map((item, index) => (
         <div

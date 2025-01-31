@@ -9,13 +9,25 @@ import { useKeyHandler } from '../hooks/userKeyHandler';
 import useHbbTV from '../hooks/useHbbTv';
 import AppConfig from '../config/Config';
 import ErrorBoundary from './ErrorBoundary';
-
+import ErrorModal from "./ErrorModal";
+const exitApp =()=>{
+  try {
+      if (typeof window.close === "function") {
+          window.close(); // Try closing the app
+      } else {
+          window.history.back(); // Navigate back in history
+      }
+  } catch (e) {
+      console.log("Exit failed: ", e);
+  }
+}
 function HbbTvApp() {
   const [isMenuActive, setMenuActive] = useState(false);
   const [isPlayerMenuActive, setPlayerMenuActive] = useState(false);
   const [isWeatherActive, setWeatherActive] = useState(false);
   const [isPlayerProgressActive, setPlayerProgressActive] = useState(false);
   const { isHbbTV, isAppRunning } = useHbbTV();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   console.log("isHbbTV", isHbbTV);
   console.log("isAppRunning", isAppRunning);
 
@@ -50,6 +62,7 @@ function HbbTvApp() {
 
   useKeyHandler({
     onEnter: () => {
+      setErrorMessage("");
       if(isPlayerProgressActive){
         setPlayerMenuActive(true);
       }else if(!isWeatherActive){
@@ -57,30 +70,41 @@ function HbbTvApp() {
       }
     },
     onArrowUp: () => {
+      setErrorMessage("");
       if(!isPlayerMenuActive){
         setWeatherActive(true);
         setPlayerProgressActive(false);
       }
     },
     onArrowLeft:()=>{
+      setErrorMessage("");
       setMenuActive(false);
     },
     onArrowRight:()=>{
+      setErrorMessage("");
       setMenuActive(false);
+    },
+    onBack:()=>{
+      console.log("HbbTvApp Exit");
+      exitApp();
     }
   });
 
   let {mpdUrl, drmLicenseUrl} = AppConfig.VideoSources[resolution] || {};
   console.log("HbbTvApp",mpdUrl, drmLicenseUrl);
 
+  const onPlaybackError = (errorMessage: string):void=>{
+    setErrorMessage(errorMessage);
+  }
   return (
      <SafeArea>
       <ErrorBoundary>
+     { errorMessage && <ErrorModal message={errorMessage} />}
      { !isMenuActive && <Weather active={isWeatherActive}  city={city} onSelect={onWeatherSelect} onClose={onWeatherClose}/> }
      { isMenuActive && <MenuList selectedItem={city} onSelect={onMenuItemSelect}  items={AppConfig.Cities}  onClose={()=>{}}/> }
      { isPlayerProgressActive && <PlayerProgress resolution={resolution} active={!isPlayerMenuActive && !isWeatherActive}/> }
      { isPlayerMenuActive && <PlayerMenuList  onClose={onPlayerMenuClose} selectedItem={resolution} onSelect={onPlayerMenuItemSelect}  items={AppConfig.ResolutionQuality}/> }
-     { true && <VideoPlayer mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} displayProgress={isPlayerProgressActive} /> }
+     { true && <VideoPlayer  mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} displayProgress={isPlayerProgressActive} onError={onPlaybackError} /> }
      </ErrorBoundary>
      </SafeArea>
   );

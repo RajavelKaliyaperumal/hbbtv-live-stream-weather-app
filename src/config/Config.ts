@@ -28,7 +28,7 @@ interface VideoRecord {
   drmLicenseUrl : string 
 }
 
-/*const VideoSources: Record<string, VideoRecord> = {
+const VideoSources: Record<string, VideoRecord> = {
     "480p": {
       mpdUrl : "https://demo-dashenc-live.zahs.tv/sd/playready.mpd",
       drmLicenseUrl: "",
@@ -41,24 +41,24 @@ interface VideoRecord {
       mpdUrl : "https://demo-dashenc-live.zahs.tv/fullhd/playready.mpd",
       drmLicenseUrl: "",
     },
-  };*/
+  };
 
 
-  const VideoSources: Record<string, VideoRecord> = {
+  /*const VideoSources: Record<string, VideoRecord> = {
     "480p": {
       mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
       drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
     },
     "720p": {
-      mpdUrl : "1https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
+      mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
       drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
     },
     "1080p": {
-      mpdUrl : "2https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
+      mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
       drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
     },
   };
-
+*/
 
 
 const AppConfig = {

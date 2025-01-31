@@ -28,24 +28,30 @@ export const useKeyHandler = ({
 }: KeyHandlerProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log("useKeyHandler",event.keyCode, event);
+      console.log("HbbTv KeyHandler - Received : ",event.keyCode);
       switch (event.keyCode) {
         case KEY_CODES.ENTER:
+          event.preventDefault();
           onEnter && onEnter();
           break;
         case KEY_CODES.BACK:
+          event.preventDefault();
           onBack && onBack();
           break;
         case KEY_CODES.UP:
+          event.preventDefault();
           onArrowUp && onArrowUp();
           break;
         case KEY_CODES.DOWN:
+          event.preventDefault();
           onArrowDown && onArrowDown();
           break;
         case KEY_CODES.LEFT:
+          event.preventDefault();
           onArrowLeft && onArrowLeft();
           break;
         case KEY_CODES.RIGHT:
+          event.preventDefault();
           onArrowRight && onArrowRight();
           break;
         case KEY_CODES.RED:

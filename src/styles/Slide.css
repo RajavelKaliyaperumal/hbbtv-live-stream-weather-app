@@ -1,0 +1,23 @@
+.slide-left {
+    opacity: 0;
+    transform: translateX(100px); /* Start off-screen to the right */
+    transition: transform 300ms ease-out;
+  }
+  
+  .slide-left.visible {
+    opacity: 1;
+    transform: translateX(0); /* Move to normal position */
+  }
+  
+
+  .slide-right {
+    opacity: 0;
+    transform: translateX(-100px); /* Start off-screen to the right */
+    transition: transform 300ms ease-out;
+  }
+  
+  .slide-right.visible {
+    opacity: 1;
+    transform: translateX(0); /* Move to normal position */
+  }
+  

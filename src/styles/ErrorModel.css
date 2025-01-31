@@ -1,0 +1,25 @@
+/* ErrorModal.css */
+.modal-overlay {
+    position: absolute;
+    top: -36px;
+    left: -128px;
+    right: -128px;
+    bottom: -36px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: gray;
+    font-size: 28px;
+    padding: 20px;
+    border-radius: 5px;
+    width: 390px;
+    text-align: center;
+    color: white;
+  }
+
+  

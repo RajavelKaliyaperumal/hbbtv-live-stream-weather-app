@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useKeyHandler } from '../hooks/userKeyHandler';
 import MenuListProps from "../types/MenuList";
 import AppConfig from "../config/Config";
 import '../styles/PlayerMenu.css';
+import '../styles/Slide.css';
 
 const PlayerMenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem, onClose }) => {
   let index = items.findIndex(item=>item===selectedItem) || 0;
   const [selectedIndex, setSelectedIndex] = useState<number>(index);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300); 
+    return () => clearTimeout(timer); // Cleanup timeout
+  }, []);
   useKeyHandler({
         onEnter: () => {
             onSelect(items[selectedIndex]);
@@ -26,7 +34,7 @@ const PlayerMenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem
     });
 
   return (
-    <div className="player_menu_container" tabIndex={0}>
+    <div className={`player_menu_container slide-right ${isVisible ? "visible" : ""}` }>
       <div className="player_menu_list"> 
       {items.map((item, index) => (
         <div
