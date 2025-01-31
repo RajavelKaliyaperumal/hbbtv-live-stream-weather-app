@@ -8,6 +8,7 @@ import PlayerMenuList from './PlayerMenu';
 import { useKeyHandler } from '../hooks/userKeyHandler';
 import useHbbTV from '../hooks/useHbbTv';
 import AppConfig from '../config/Config';
+import ErrorBoundary from './ErrorBoundary';
 
 function HbbTvApp() {
   const [isMenuActive, setMenuActive] = useState(false);
@@ -70,17 +71,18 @@ function HbbTvApp() {
   });
 
   let {mpdUrl, drmLicenseUrl} = AppConfig.VideoSources[resolution] || {};
+  console.log("HbbTvApp",mpdUrl, drmLicenseUrl);
 
   return (
-    <div className="App">
      <SafeArea>
+      <ErrorBoundary>
      { !isMenuActive && <Weather active={isWeatherActive}  city={city} onSelect={onWeatherSelect} onClose={onWeatherClose}/> }
      { isMenuActive && <MenuList selectedItem={city} onSelect={onMenuItemSelect}  items={AppConfig.Cities}  onClose={()=>{}}/> }
      { isPlayerProgressActive && <PlayerProgress resolution={resolution} active={!isPlayerMenuActive && !isWeatherActive}/> }
      { isPlayerMenuActive && <PlayerMenuList  onClose={onPlayerMenuClose} selectedItem={resolution} onSelect={onPlayerMenuItemSelect}  items={AppConfig.ResolutionQuality}/> }
-     { false && <VideoPlayer mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} /> }
+     { true && <VideoPlayer mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} displayProgress={isPlayerProgressActive} /> }
+     </ErrorBoundary>
      </SafeArea>
-    </div>
   );
 }
 

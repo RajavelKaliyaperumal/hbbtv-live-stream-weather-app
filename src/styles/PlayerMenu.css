@@ -1,13 +1,13 @@
 
 .player_menu_container{
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.6); 
-    width: 290px;
-    height: 200px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;  
-    bottom: 84px;
-    z-index: 1;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 168px;
+  height: 200px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  bottom: 94px;
+  z-index: 1;
   }
 
   .player_menu_list{
@@ -17,13 +17,12 @@
   }
   .player_menu_item {
     height: 50px;
-    width: 240px;
+    width: 120px;
     font-size: 30px;
     line-height: 50px;
     padding-left: 10px;
     border-radius: 10px;
     color: #EBECF0;
-
   }
   
   .player_menu_item.selected {
@@ -31,3 +30,5 @@
     color: white;
     background-color: #356ca6;
   }
+
+

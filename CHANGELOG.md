@@ -1,4 +1,12 @@
 # Changelog
+v1.0.1 (2025-01-31)
+- Integrated the Dash js to playback the DRM content
+- Implemented HTML5 Videoplayer with Dash
+- Added Loading Spinner and Video Progress Bar
+- Added ErrorBoundary to catch runtime exception
+- UI Improvement of Player Menu
+- Fixed Weather API Retry Issue
+
 v1.0.0 (2025-01-30)
 - Initial Working Version
 - Added createApplicationManagerObject

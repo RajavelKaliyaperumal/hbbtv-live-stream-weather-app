@@ -50,8 +50,8 @@ export const useWeather = (location: string) => {
         localStorage.setItem(cacheKey, JSON.stringify(weatherData));
         localStorage.setItem(`${cacheKey}_timestamp`, Date.now().toString());
       } catch (err) {
-        if (retryCount <= 5) {
-          const delay = fibonacci(retryCount + 1) * 1000; // Fibonacci delay in milliseconds
+        if (retryCount <= AppConfig.WEATHER_API_RETRY_COUNT) {
+          const delay = fibonacci(retryCount + 1) * 3000; // Fibonacci delay in milliseconds
           console.log(`Retrying in ${delay / 1000} seconds...`);
           setTimeout(() => fetchWeather(retryCount + 1), delay);
         } else {
@@ -61,7 +61,7 @@ export const useWeather = (location: string) => {
       }
     };
 
-    fetchWeather(AppConfig.WEATHER_API_RETRY_COUNT);
+    fetchWeather();
 
     return () => {
       isMounted = false;
