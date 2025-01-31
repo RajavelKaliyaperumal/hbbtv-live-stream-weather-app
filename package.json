@@ -1,6 +1,6 @@
 {
   "name": "hbbtv-live-stream-weather-app",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "author": "Rajavel Kaliyaperumal",
   "private": true,
   "dependencies": {

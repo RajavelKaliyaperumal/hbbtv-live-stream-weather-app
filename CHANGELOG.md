@@ -1,4 +1,7 @@
 # Changelog
+v1.0.3 2025-01-31
+- Exception handling
+
 v1.0.2 (2025-01-31)
 - Prevent default browser behavior to keep control in the HbbTV app
 - Proper keyset handling with the HbbTV keyset API

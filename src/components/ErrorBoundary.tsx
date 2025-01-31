@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [hasError, setHasError] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -20,8 +21,8 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     };
   }, []);
 
-  if (hasError) {
-    return <h1>Something went wrong. {error}</h1>;
+  if (hasError ) {
+    return <h1>Something went wrong</h1>;
   }
 
   return <>{children}</>;

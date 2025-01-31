@@ -25,7 +25,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   });
   useEffect(() => {
     if (videoRef.current) {
-      navigator
+      try {
+        navigator
         .requestMediaKeySystemAccess("com.microsoft.playready", [
           {
             initDataTypes: ["cenc"],
@@ -46,7 +47,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         playerRef.current.reset();
         setProgress(0);
       }
-      try {
         const player = dashjs.MediaPlayer().create();
 
         playerRef.current = player;
@@ -55,6 +55,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         player.initialize(videoRef.current, mpdUrl, true);
 
         const video = videoRef.current;
+        video.focus();
 
         // Enable automatic DRM handling from MPD file
         let protectionData = { "com.microsoft.playready": {} };
@@ -109,6 +110,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             console.log("Video started playing.");
           } catch (err) {
             console.warn("Autoplay blocked. Waiting for user interaction.");
+            onError("Autoplay blocked. Waiting for user interaction");
           }
         };
 
@@ -165,6 +167,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         };
       } catch (e) {
         console.log(e);
+        onError("Playback failed");
       }
     }
   }, [mpdUrl, drmLicenseUrl]);
