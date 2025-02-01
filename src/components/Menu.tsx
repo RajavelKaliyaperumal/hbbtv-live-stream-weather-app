@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useKeyHandler } from '../hooks/userKeyHandler';
 import MenuListProps from "../types/MenuList";
+import List from "./List";
 import '../styles/Menu.css';
 import '../styles/Slide.css';
 
 const MenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem }) => {
+  console.log("MenuList Component");
   let index = items.findIndex(item=>item===selectedItem) || 0;
   const [selectedIndex, setSelectedIndex] = useState<number>(index);
   const [isVisible, setIsVisible] = useState(false);
@@ -29,16 +31,7 @@ const MenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem }) =>
 
   return (
     <div  className={`menu_container slide-left ${isVisible ? "visible" : ""}`}>
-      <div className="menu_list"> 
-      {items.map((item, index) => (
-        <div
-          key={index}
-          className={`menu_item ${index === selectedIndex ? "selected" : ""}`}
-        >
-          {item}
-        </div>
-      ))}
-      </div> 
+      <List items={items} selectedIndex={selectedIndex} listClassName="menu_list" listItemClassName="menu_item" />
     </div>
   );
 };

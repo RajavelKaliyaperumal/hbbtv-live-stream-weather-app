@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {memo} from 'react';
 import Spinner from './Spinner';
 import { useWeather } from '../hooks/useWeather';
 import { useKeyHandler } from '../hooks/userKeyHandler';
 import WeatherProps from '../types/Weather';
+import AppConfig from '../config/Config';
+import Image from './Image';
 import '../styles/Weather.css';
 //
 //- Fetch live weather data using the OpenWeatherMap API or a similar service.
@@ -13,9 +15,28 @@ import '../styles/Weather.css';
 //- Show a relevant weather icon.
 //
 
-const Weather: React.FC<WeatherProps> = ({onSelect, city, active, onClose}) => {
-  const { weather:weatherData, loading, error } = useWeather(city);
+const WeatherIcon: React.FC<{icon: string, description: string}> = memo(({icon, description}) => {
+  return (
+    <div className="weather_image_container">
+      <Image className='weather_icon' src={AppConfig.WEATHER_ICON_ENDPOINT.replace("<icon>",icon)} alt={description}/>
+    </div>
+  );
+});
 
+
+const WeatherInfo: React.FC<{temperature: number, description : string, humidity: number}> = memo(({temperature, description, humidity}) => {
+  return (
+      <>
+      <div className='weather_temp'>{Math.round(temperature)}°C</div>
+      <div className='weather_conditions'>{description}</div>
+      <div className='weather_humidity'>Humidity {humidity}%</div>
+      </>
+  );
+});
+
+const Weather: React.FC<WeatherProps> = memo(({onSelect, city, active, onClose}) => {
+  const { weather:weatherData, loading, error } = useWeather(city);
+  console.log("Weather Component");
    useKeyHandler({
       onEnter: () => {
         if(active){
@@ -47,21 +68,12 @@ const Weather: React.FC<WeatherProps> = ({onSelect, city, active, onClose}) => {
 
       {weatherData && !loading && !error && (
           <div className="weather_container">
-          <div className='weather_image_container'>
-            <img className='weather_icon'
-            src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
-            alt={weatherData.weather[0].description}
-          /></div>
-          <div className='weather_temp'>{Math.round(weatherData.main.temp)}°C</div>
-          <div className='weather_conditions'>{weatherData.weather[0].description}</div>
-          <div className='weather_humidity'>Humidity {weatherData.main.humidity}%</div>
+          <WeatherIcon icon={weatherData.weather[0].icon}  description={weatherData.weather[0].description}/>
+          <WeatherInfo temperature={weatherData.main.temp} description={weatherData.weather[0].description} humidity={weatherData.main.humidity} />
         </div>
       )}
     </div>
   );
-};
+});
 
 export default Weather;
-
-//<div className='weather_conditions'>{weatherData.weather[0].description}</div>
-//<div className='weather_humidity'>Humidity {weatherData.main.humidity}%</div>-->

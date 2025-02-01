@@ -1,6 +1,6 @@
 import React from "react";
 import '../styles/ErrorModel.css';
-
+const version = process.env.REACT_APP_VERSION;
 interface ErrorModalProps {
   message: string | null;
 }
@@ -11,7 +11,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <p>{message}</p>
+        <p>{message+" App version"+ version}</p>
       </div>
     </div>
   );

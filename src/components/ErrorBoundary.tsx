@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import ErrorModal from './ErrorModal';
 
 
 const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [hasError, setHasError] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const errorHandler = (event: any) => {
       setHasError(true);
-      setError(event.error || '')
       console.error('Caught error:', event?.error);
     };
     
@@ -21,8 +20,9 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     };
   }, []);
 
+  let message = "Oops! Something went wrong. Restart the app and try again."
   if (hasError ) {
-    return <h1>Something went wrong</h1>;
+    return <ErrorModal message={message}/>
   }
 
   return <>{children}</>;

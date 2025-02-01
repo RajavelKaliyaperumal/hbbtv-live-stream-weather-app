@@ -1,5 +1,10 @@
 # Changelog
-v1.0.3 2025-01-31
+v1.0.4 (2025-02-01)
+- Optimized the React Compontents
+- Playback Error Handling
+- Query param support to load the hbbtv reference content
+
+v1.0.3 (2025-01-31)
 - Exception handling
 
 v1.0.2 (2025-01-31)

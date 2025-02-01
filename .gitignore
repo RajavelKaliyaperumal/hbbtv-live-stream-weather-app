@@ -26,3 +26,5 @@ yarn-error.log*
 #017914354411aa57b015db559387ef50
 
 #https://api.openweathermap.org/data/2.5/weather?q=london&appid=017914354411aa57b015db559387ef50&units=metric
+
+.vercel

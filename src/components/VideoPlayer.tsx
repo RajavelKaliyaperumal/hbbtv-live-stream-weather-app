@@ -16,10 +16,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = useRef<dashjs.MediaPlayerClass | null>(null);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCanPlay, setIsCanPlay] = useState(false);
   useKeyHandler({
     onEnter: () => {
-      if (videoRef.current) {
-        //videoRef.current.play();
+      console.log("isCanPlay", isCanPlay);
+      if (videoRef.current && isCanPlay) {
+        videoRef.current.play();
       }
     },
   });
@@ -43,13 +45,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           onError("PlayReady is not supported");
         });
 
-      if (playerRef.current) {
-        playerRef.current.reset();
-        setProgress(0);
-      }
+          if (playerRef.current) {
+            playerRef.current.reset();
+            playerRef.current.destroy();
+            setProgress(0);
+          }
         const player = dashjs.MediaPlayer().create();
 
         playerRef.current = player;
+
+        setIsCanPlay(false);
 
         // Set the MPD URL (manifest file) for the player
         player.initialize(videoRef.current, mpdUrl, true);
@@ -108,6 +113,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           try {
             await video.play();
             console.log("Video started playing.");
+            onError('');
           } catch (err) {
             console.warn("Autoplay blocked. Waiting for user interaction.");
             onError("Autoplay blocked. Waiting for user interaction");
@@ -145,10 +151,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           canplay: () => {
             console.log("Video can play.");
             setIsLoading(false);
+            setIsCanPlay(true);
           },
           canplaythrough: () => {
             console.log("Video can play through.");
             setIsLoading(false);
+            setIsCanPlay(true);
+          },
+          error: () => {
+            console.log("Video Error.", video.error);
+            setIsLoading(false);
+            let code = video.error?.code || "unknown";
+            let message = video.error?.message || "";
+            onError(`Playback failed due to ${code} ${message} `);
           },
         };
 
@@ -170,13 +185,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         onError("Playback failed");
       }
     }
-  }, [mpdUrl, drmLicenseUrl]);
-  const handleCloseModal = (): void => {};
+  }, [mpdUrl, drmLicenseUrl, onError]);
   return (
     <div className="hbbtv_video_player">
       {isLoading && (
         <div className="hbbtv_video_loading">
-          {" "}
           <Spinner />
         </div>
       )}

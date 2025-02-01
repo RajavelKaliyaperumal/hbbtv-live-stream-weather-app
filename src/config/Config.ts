@@ -10,7 +10,10 @@ const OPENWEATHERMAP_API_KEY = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
 
 const WEATHER_API_RESPONSE_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-const WEATHER_API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=<city>&appid=${OPENWEATHERMAP_API_KEY}&units=metric`
+const WEATHER_API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=<city>&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
+
+const WEATHER_ICON_ENDPOINT = `https://openweathermap.org/img/wn/<icon>@4x.png`;
+
 
 const WEATHER_API_RETRY_COUNT = 5;//
 
@@ -44,20 +47,26 @@ const VideoSources: Record<string, VideoRecord> = {
   };
 
 
-  /*const VideoSources: Record<string, VideoRecord> = {
+  const VideoSourcesFromHbbTv: Record<string, VideoRecord> = {
+    
     "480p": {
+      //"2.1 AVC 1080p",
+      // DASH PlayReady 1
       mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
       drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
     },
     "720p": {
-      mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
-      drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
+      //"2.1.1 AVC 1080p, LaUrl in mpd"
+      // DASH PlayReady 1
+      mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p_1a_laurl.mpd",
+      drmLicenseUrl: "",
     },
     "1080p": {
-      mpdUrl : "https://refapp.hbbtv.org/videos/00_llama_h264_v9/cenc/manifest_prcenc_1080p.mpd",
-      drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:header,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
+      //"2.11 AVC 1080p SL3000",
+      mpdUrl : "https://refapp.hbbtv.org/videos/spring_h264_v9/cenc/manifest_prcenc_1080p.mpd",
+      drmLicenseUrl: "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(kid:43215678-1234-1234-1234-123412341237,sl:3000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNw==),(kid:43215678-1234-1234-1234-123412341236,sl:2000,persist:false,contentkey:EjQSNBI0EjQSNBI0EjQSNg==)",
     },
-  };*/
+  };
 
 
 
@@ -65,10 +74,12 @@ const AppConfig = {
     Cities,
     ResolutionQuality,
     VideoSources,
+    VideoSourcesFromHbbTv,
     ResolutionsMap,
     WEATHER_API_ENDPOINT,
     WEATHER_API_RESPONSE_CACHE_DURATION,
-    WEATHER_API_RETRY_COUNT
+    WEATHER_API_RETRY_COUNT,
+    WEATHER_ICON_ENDPOINT
 };
 
 export default AppConfig;

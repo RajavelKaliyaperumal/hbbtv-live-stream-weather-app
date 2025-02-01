@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import SafeArea from './SafeArea';
 import VideoPlayer from './VideoPlayer';
 import Weather from './Weather';
@@ -10,6 +10,8 @@ import useHbbTV from '../hooks/useHbbTv';
 import AppConfig from '../config/Config';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorModal from "./ErrorModal";
+import useQuery from '../hooks/useQuery';
+
 const exitApp =()=>{
   try {
       if (typeof window.close === "function") {
@@ -28,37 +30,43 @@ function HbbTvApp() {
   const [isPlayerProgressActive, setPlayerProgressActive] = useState(false);
   const { isHbbTV, isAppRunning } = useHbbTV();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [city, setCity] = useState<string>('London');
+  const [resolution, setResolution] = useState<string>('480p');
+  const query = useQuery();
+
   console.log("isHbbTV", isHbbTV);
   console.log("isAppRunning", isAppRunning);
 
-  const [city, setCity] = useState<string>('London');
-  const [resolution, setResolution] = useState<string>('480p');
+  const onWeatherSelect = useCallback(():void=>{
+      setMenuActive(true);
+    },[]);
 
-  const onWeatherSelect = (selectedItem:string):void=>{
-    setMenuActive(true);
-  }
- const onWeatherClose = ():void=>{
-  setWeatherActive(false);
-  setPlayerProgressActive(true);
- }
+  const onWeatherClose = useCallback(():void=>{
+    setWeatherActive(false);
+    setPlayerProgressActive(true);
+  },[]);
 
-  const onMenuItemSelect = (selectedItem:string):void=>{
+  const onMenuItemSelect = useCallback((selectedItem:string):void=>{
     setMenuActive(false);
     setPlayerProgressActive(false);
     setWeatherActive(true);
     setCity(selectedItem);
+  },[]);
 
-  }
-  const onPlayerMenuItemSelect = (selectedItem:string):void=>{
+  const onPlayerMenuItemSelect = useCallback((selectedItem:string):void=>{
     setResolution(selectedItem);
     setPlayerMenuActive(false);
     setPlayerProgressActive(true);
-  }
+  },[]);
 
-  const onPlayerMenuClose= ():void=>{
+  const onPlayerMenuClose= useCallback(():void=>{
     setPlayerMenuActive(false);
     setPlayerProgressActive(true);
-  }
+  },[]);
+
+  const onPlaybackError = useCallback((errorMessage: string):void=>{
+    setErrorMessage(errorMessage);
+  },[]);
 
   useKeyHandler({
     onEnter: () => {
@@ -90,12 +98,14 @@ function HbbTvApp() {
     }
   });
 
-  let {mpdUrl, drmLicenseUrl} = AppConfig.VideoSources[resolution] || {};
+  const source = query.get('source');
+  let videoSources = AppConfig.VideoSources;
+  if(source && source === "hbbtv"){
+    videoSources = AppConfig.VideoSourcesFromHbbTv;
+  }
+  let {mpdUrl, drmLicenseUrl} = videoSources[resolution] || {};
   console.log("HbbTvApp",mpdUrl, drmLicenseUrl);
 
-  const onPlaybackError = (errorMessage: string):void=>{
-    setErrorMessage(errorMessage);
-  }
   return (
      <SafeArea>
       <ErrorBoundary>

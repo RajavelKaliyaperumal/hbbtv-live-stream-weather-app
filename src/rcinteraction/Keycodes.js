@@ -27,7 +27,7 @@ if (typeof(KeyboardEvent) != 'undefined') {
     var VK_RIGHT = 39;
     var VK_DOWN = 40;
     var VK_ENTER = 13;
-    var VK_BACK = 220;
+    var VK_BACK = 461;
   }
 
 
