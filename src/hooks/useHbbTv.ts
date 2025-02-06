@@ -1,38 +1,45 @@
 import { useEffect, useState } from "react";
-import RCKeySet from "../rcinteraction/RCKeySet";
+import { OipfApplication, ApplicationManager} from "../types/HbbTV";
 
-interface HbbTVStatus {
-  isHbbTV: boolean;
-  isAppRunning: boolean;
-}
+/*
+Key Methods of Application Object
+show(): Makes the application visible.
+hide(): Hides the application.
+destroyApplication(): Stops the application.
+privateData.keyset.setValue(): Configures which remote control keys the app can use.
+*/
 
-const useHbbTV = (): HbbTVStatus => {
-  const [status, setStatus] = useState<HbbTVStatus>({
-    isHbbTV: false,
-    isAppRunning: false,
-  });
+const useHbbTv = () => {
+    const [app, setApp] = useState<OipfApplication | null>(null);
+    const [appManager, setAppManager] = useState<ApplicationManager | null>(null);
+    const [isHbbTvSupported, setIsHbbTvSupported] = useState<boolean>(false);
 
-  useEffect(() => {
-    try {
-      const appManager = (window as any).oipfObjectFactory?.createApplicationManagerObject();
-      console.log(appManager);
-      if (appManager) {
-        const app = appManager.getOwnerApplication(document);
-        app.show();
+    useEffect(() => {
+        try {
+            // Create Application Manager Object
+            const appMan = document.createApplicationManagerObject("application/oipfApplicationManager");
+            const ownerApp = appMan.getOwnerApplication(document);
 
-        setStatus({
-          isHbbTV: true,
-          isAppRunning: true,
-        });
-        // when shown, app reacts to all buttons relevant on the scene
-        RCKeySet.setKeyset(app, RCKeySet.getRelevantButtonsMask({navigation: true}));
-      }
-    } catch (error) {
-      console.warn("HbbTV not supported on this device.");
-    }
-  }, []);
+            if (appMan && ownerApp) {
+                setApp(ownerApp);
+                setAppManager(appMan);
+                setIsHbbTvSupported(true);
+            }
+        } catch (error) {
+            console.warn("HbbTV environment not detected:", error);
+            setIsHbbTvSupported(false);
+        }
+    }, []);
 
-  return status;
+    return {
+        isHbbTvSupported,
+        app,
+        appManager,
+        showApp: () => app?.show(),
+        hideApp: () => app?.hide(),
+        exitApp: () => app?.destroyApplication(),
+        setKeyset: (keys: number) => app?.privateData?.keyset.setValue(keys),
+    };
 };
 
-export default useHbbTV;
+export default useHbbTv;

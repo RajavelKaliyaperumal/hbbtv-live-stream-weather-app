@@ -18,6 +18,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isCanPlay, setIsCanPlay] = useState(false);
   useKeyHandler({
+    componentName:"VideoPlayer",
     onEnter: () => {
       console.log("isCanPlay", isCanPlay);
       if (videoRef.current && isCanPlay) {

@@ -25,9 +25,10 @@ const WeatherIcon: React.FC<{icon: string, description: string}> = memo(({icon, 
 
 
 const WeatherInfo: React.FC<{temperature: number, description : string, humidity: number}> = memo(({temperature, description, humidity}) => {
+  let temp = Math.floor(temperature * 10) / 10;
   return (
       <>
-      <div className='weather_temp'>{Math.round(temperature)}°C</div>
+      <div className='weather_temp'>{temp}°C</div>
       <div className='weather_conditions'>{description}</div>
       <div className='weather_humidity'>Humidity {humidity}%</div>
       </>
@@ -36,8 +37,9 @@ const WeatherInfo: React.FC<{temperature: number, description : string, humidity
 
 const Weather: React.FC<WeatherProps> = memo(({onSelect, city, active, onClose}) => {
   const { weather:weatherData, loading, error } = useWeather(city);
-  console.log("Weather Component");
+  console.log(`Weather Component City ${city}, state ${active}`);
    useKeyHandler({
+      componentName:"Weather",
       onEnter: () => {
         if(active){
           onSelect(city);

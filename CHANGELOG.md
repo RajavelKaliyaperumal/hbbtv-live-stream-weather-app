@@ -1,4 +1,8 @@
 # Changelog
+v1.0.5
+- Prevents Unnecessary Re-registration of Keyhandler Listeners
+- Simplified the component state by using reducer
+
 v1.0.4 (2025-02-01)
 - Optimized the React Compontents
 - Playback Error Handling

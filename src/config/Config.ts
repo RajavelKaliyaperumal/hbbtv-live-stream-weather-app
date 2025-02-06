@@ -14,8 +14,11 @@ const WEATHER_API_ENDPOINT = `https://api.openweathermap.org/data/2.5/weather?q=
 
 const WEATHER_ICON_ENDPOINT = `https://openweathermap.org/img/wn/<icon>@4x.png`;
 
+const WEATHER_API_RETRY_COUNT = 5;
 
-const WEATHER_API_RETRY_COUNT = 5;//
+const WEATHER_DEFAULT_CITY = "London";
+
+const VIDEO_DEFAULT_QUALITY = "480p";
 
 //For UI Menu
 const ResolutionsMap: Record<string, string> = {
@@ -79,7 +82,9 @@ const AppConfig = {
     WEATHER_API_ENDPOINT,
     WEATHER_API_RESPONSE_CACHE_DURATION,
     WEATHER_API_RETRY_COUNT,
-    WEATHER_ICON_ENDPOINT
+    WEATHER_ICON_ENDPOINT,
+    WEATHER_DEFAULT_CITY,
+    VIDEO_DEFAULT_QUALITY
 };
 
 export default AppConfig;

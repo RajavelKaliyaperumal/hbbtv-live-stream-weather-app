@@ -6,20 +6,6 @@ const RCKeySet = {
     MASK_CONSTANT_NAVIGATION: 0x10,
     MASK_CONSTANT_PLAYBACK: 0x20,
     MASK_CONSTANT_NUMERIC: 0x100,
-    setKeyset:function(app, mask) {
-        try {
-            app.privateData.keyset.setValue(mask);
-        } catch (e) {
-            console.error("setKeyset Error",e)
-            try {
-                app.private.keyset.setValue(mask);
-            }
-            catch (ee) {
-                // catch the error while setting keyset value 
-                console.error("setKeyset Error",e)
-            }
-        }
-    },
     getRelevantButtonsMask: function({navigation}){
         // mask includes color buttons
         //var mask = RCKeySet.MASK_CONSTANT_RED + RCKeySet.MASK_CONSTANT_GREEN + RCKeySet.MASK_CONSTANT_YELLOW + RCKeySet.MASK_CONSTANT_BLUE;

@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useReducer, useEffect} from 'react';
 import SafeArea from './SafeArea';
 import VideoPlayer from './VideoPlayer';
 import Weather from './Weather';
@@ -11,8 +11,10 @@ import AppConfig from '../config/Config';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorModal from "./ErrorModal";
 import useQuery from '../hooks/useQuery';
+import { reducer, initialState, State, Action, ActionTypes } from "../components/reducer";
+import RCKeySet from '../rcinteraction/RCKeySet';
 
-const exitApp =()=>{
+const exitBrowser =()=>{
   try {
       if (typeof window.close === "function") {
           window.close(); // Try closing the app
@@ -23,45 +25,51 @@ const exitApp =()=>{
       console.log("Exit failed: ", e);
   }
 }
-function HbbTvApp() {
-  const [isMenuActive, setMenuActive] = useState(false);
-  const [isPlayerMenuActive, setPlayerMenuActive] = useState(false);
-  const [isWeatherActive, setWeatherActive] = useState(false);
-  const [isPlayerProgressActive, setPlayerProgressActive] = useState(false);
-  const { isHbbTV, isAppRunning } = useHbbTV();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [city, setCity] = useState<string>('London');
-  const [resolution, setResolution] = useState<string>('480p');
-  const query = useQuery();
 
-  console.log("isHbbTV", isHbbTV);
-  console.log("isAppRunning", isAppRunning);
+
+function HbbTvApp() {
+  const [state, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, initialState);
+  const { isHbbTvSupported, showApp, exitApp, setKeyset } = useHbbTV();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [city, setCity] = useState<string>(AppConfig.WEATHER_DEFAULT_CITY);
+  const [resolution, setResolution] = useState<string>(AppConfig.VIDEO_DEFAULT_QUALITY);
+  const query = useQuery();
+  useEffect(()=>{
+    if(isHbbTvSupported){
+      //Makes the application visible.
+      showApp();
+      // Enable remote keys and listen for back/exit key
+      setKeyset(RCKeySet.getRelevantButtonsMask({navigation : true}));
+    }else{
+      console.log("isHbbTvSupported", isHbbTvSupported);
+    }
+  },[]);
 
   const onWeatherSelect = useCallback(():void=>{
-      setMenuActive(true);
+      dispatch({type : ActionTypes.SHOW_WEATHERMENU});
     },[]);
 
   const onWeatherClose = useCallback(():void=>{
-    setWeatherActive(false);
-    setPlayerProgressActive(true);
+    dispatch({type : ActionTypes.HIDE_WEATHER});
+    dispatch({type : ActionTypes.SHOW_PLAYERPROGRESS});
   },[]);
 
-  const onMenuItemSelect = useCallback((selectedItem:string):void=>{
-    setMenuActive(false);
-    setPlayerProgressActive(false);
-    setWeatherActive(true);
+  const onWeatherMenuItemSelect = useCallback((selectedItem:string):void=>{
+    dispatch({type : ActionTypes.HIDE_WEATHERMENU});
+    dispatch({type : ActionTypes.HIDE_PLAYERPROGRESS});
+    dispatch({type : ActionTypes.SHOW_WEATHER});
     setCity(selectedItem);
   },[]);
 
   const onPlayerMenuItemSelect = useCallback((selectedItem:string):void=>{
     setResolution(selectedItem);
-    setPlayerMenuActive(false);
-    setPlayerProgressActive(true);
+    dispatch({type : ActionTypes.HIDE_PLAYERMENU});
+    dispatch({type : ActionTypes.SHOW_PLAYERPROGRESS});
   },[]);
 
   const onPlayerMenuClose= useCallback(():void=>{
-    setPlayerMenuActive(false);
-    setPlayerProgressActive(true);
+    dispatch({type : ActionTypes.HIDE_PLAYERMENU});
+    dispatch({type : ActionTypes.SHOW_PLAYERPROGRESS});
   },[]);
 
   const onPlaybackError = useCallback((errorMessage: string):void=>{
@@ -69,32 +77,37 @@ function HbbTvApp() {
   },[]);
 
   useKeyHandler({
+    componentName: "HbbTvApp",
     onEnter: () => {
       setErrorMessage("");
-      if(isPlayerProgressActive){
-        setPlayerMenuActive(true);
-      }else if(!isWeatherActive){
-        setPlayerProgressActive(true);
+      if(state.displayPlayerProgress){
+        dispatch({ type: ActionTypes.SHOW_PLAYERMENU});
+      }else if(!state.displayWeather){
+        dispatch({type : ActionTypes.SHOW_PLAYERPROGRESS});
       }
     },
     onArrowUp: () => {
       setErrorMessage("");
-      if(!isPlayerMenuActive){
-        setWeatherActive(true);
-        setPlayerProgressActive(false);
+      if(!state.displayPlayerMenu){
+        dispatch({type: ActionTypes.SHOW_WEATHER});
+        dispatch({type : ActionTypes.HIDE_PLAYERPROGRESS});
       }
     },
     onArrowLeft:()=>{
       setErrorMessage("");
-      setMenuActive(false);
+      dispatch({type : ActionTypes.HIDE_PLAYERMENU});
     },
     onArrowRight:()=>{
       setErrorMessage("");
-      setMenuActive(false);
+      dispatch({type : ActionTypes.HIDE_PLAYERMENU});
     },
     onBack:()=>{
       console.log("HbbTvApp Exit");
-      exitApp();
+      if(isHbbTvSupported){
+        exitApp();
+      }else{
+        exitBrowser();
+      }
     }
   });
 
@@ -105,16 +118,15 @@ function HbbTvApp() {
   }
   let {mpdUrl, drmLicenseUrl} = videoSources[resolution] || {};
   console.log("HbbTvApp",mpdUrl, drmLicenseUrl);
-
   return (
      <SafeArea>
       <ErrorBoundary>
      { errorMessage && <ErrorModal message={errorMessage} />}
-     { !isMenuActive && <Weather active={isWeatherActive}  city={city} onSelect={onWeatherSelect} onClose={onWeatherClose}/> }
-     { isMenuActive && <MenuList selectedItem={city} onSelect={onMenuItemSelect}  items={AppConfig.Cities}  onClose={()=>{}}/> }
-     { isPlayerProgressActive && <PlayerProgress resolution={resolution} active={!isPlayerMenuActive && !isWeatherActive}/> }
-     { isPlayerMenuActive && <PlayerMenuList  onClose={onPlayerMenuClose} selectedItem={resolution} onSelect={onPlayerMenuItemSelect}  items={AppConfig.ResolutionQuality}/> }
-     { true && <VideoPlayer  mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} displayProgress={isPlayerProgressActive} onError={onPlaybackError} /> }
+     { !state.displayWeatherMenu && <Weather active={state.displayWeather}  city={city} onSelect={onWeatherSelect} onClose={onWeatherClose}/> }
+     { state.displayWeatherMenu && <MenuList selectedItem={city} onSelect={onWeatherMenuItemSelect}  items={AppConfig.Cities}  onClose={()=>{}}/> }
+     { state.displayPlayerProgress && <PlayerProgress resolution={resolution} active={!state.displayPlayerMenu && !state.displayWeather}/> }
+     { state.displayPlayerMenu && <PlayerMenuList  onClose={onPlayerMenuClose} selectedItem={resolution} onSelect={onPlayerMenuItemSelect}  items={AppConfig.ResolutionQuality}/> }
+     <VideoPlayer  mpdUrl={mpdUrl} drmLicenseUrl={drmLicenseUrl} displayProgress={state.displayPlayerProgress} onError={onPlaybackError} />
      </ErrorBoundary>
      </SafeArea>
   );

@@ -17,6 +17,7 @@ const PlayerMenuList: React.FC<MenuListProps> = ({ items, onSelect, selectedItem
     return () => clearTimeout(timer); // Cleanup timeout
   }, []);
   useKeyHandler({
+       componentName:"PlayerMenuList",
         onEnter: () => {
             onSelect(items[selectedIndex]);
         },
